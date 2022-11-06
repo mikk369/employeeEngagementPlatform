@@ -13,16 +13,16 @@ exports.createHours = async (req, res, next) => {
   }
 };
 
-// exports.getHour = async (req, res, next) => {
-//   const hours = await Hours.findById(req.params.id);
-//   if (!hours) {
-//     return next('hours with given ID not found', 404);
-//   }
+exports.getHour = async (req, res, next) => {
+  const hours = await Hours.findById(req.params.id);
+  if (!hours) {
+    return next('hours with given ID not found', 404);
+  }
 
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       hours,
-//     },
-//   });
-// };
+  res.status(200).json({
+    status: 'success',
+    data: {
+      hours,
+    },
+  });
+};
