@@ -1,0 +1,69 @@
+openapi: 3.0.2
+info:
+  title: employeeEngagementPlatform
+  version: 1.0.0
+paths:
+  /hours:
+    post:
+    responses:
+      '201':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hours'
+        description: user can add hours
+  '/hours/:id':
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+          description: user can get added hours
+components:
+  schemas:
+    hours:
+      title: Root Type for employees
+      description: ''
+      type: array
+      items:
+        $ref: '#/components/schemas/hours'
+      example:
+        userId:
+          - 6366eec1385c79a791f80ee9
+        month: November
+        year: 2009
+        days:
+          day: wednesday
+          hours: 9
+paths:
+  /users/signup:
+    post:
+      tags:
+        - users
+      summary: Signup a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                password:
+                  type: string
+                  passwordConfirm: string
+              example:
+                name: mike
+                password: mikk12345
+      responses:
+        "201":
+          description: User created
+        "403":
+          description: User already exists
+        "406":
+          description: Email or password not acceptable
+        "500":
+          description: Error
