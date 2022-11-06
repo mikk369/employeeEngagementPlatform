@@ -4,4 +4,4 @@
 
 ###########################################
 
-npm npm i for backend dependencies
+npm i for backend dependencies
