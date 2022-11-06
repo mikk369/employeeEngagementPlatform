@@ -1,6 +1,6 @@
 <h1>employeeEngagementPlatform<h1>
 
-<h2>Adding hours to keep track your work<h2>
+<h2>Can add hours to keep track your work<h2>
 
 ###########################################
 
