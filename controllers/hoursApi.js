@@ -47,3 +47,18 @@ exports.updateHours = async (req, res, next) => {
     });
   }
 };
+
+exports.deleteHour = async (req, res, next) => {
+  try {
+    await Hours.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'no document with given id',
+    });
+  }
+};

@@ -45,6 +45,17 @@ components:
               schema:
                 $ref: '#/components/schemas/hours'
           description: user can update hours 
+  /hours/:id:
+        delete:
+            requestBody:
+                required: true
+            responses:
+                '204':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/hours'
+                    description: deletes hours from list
 paths:
   /users/signup:
     post:
