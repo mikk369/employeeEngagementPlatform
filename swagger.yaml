@@ -5,22 +5,48 @@ info:
 paths:
   /hours:
     post:
-    responses:
-      '201':
+      summary: create new hours
+      tags: [Hours]
+      requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/hours'
-        description: user can add hours
-  /hours/:id:
-    get:
       responses:
-        '200':
+        '201':
+          description: user can add hours
+  /hours:
+    get:
+      summary: Returns list of hours
+      tags: [Hours]
+      responses:
+        200:
+          description: list of the hours
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/hours'
-          description: user can get added hours  
+                type: array
+                items:
+                  $ref: '#/components/schemas/hours' 
+/hours/{id}:
+    get:
+      summary: Get hours by id
+      tags: [Hours]
+      parameters:
+        - in: path
+          name: id
+          schema:
+           type: string
+          required: true
+          description: hours id
+      responses:
+        200:
+          description: hours by id
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/hour'
 components:
   schemas:
     hours:
