@@ -4,6 +4,6 @@ const hoursApi = require('./../controllers/hoursApi');
 
 router.route('/').post(hoursApi.createHours);
 
-router.route('/:id').get(hoursApi.getHour);
+router.route('/:id').get(hoursApi.getHour).patch(hoursApi.updateHours);
 
 module.exports = router;

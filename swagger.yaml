@@ -12,7 +12,7 @@ paths:
             schema:
               $ref: '#/components/schemas/hours'
         description: user can add hours
-  '/hours/:id':
+  /hours/:id:
     get:
       responses:
         '200':
@@ -20,7 +20,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/hours'
-          description: user can get added hours
+          description: user can get added hours  
 components:
   schemas:
     hours:
@@ -37,6 +37,14 @@ components:
         days:
           day: wednesday
           hours: 9
+  /hours/:id:
+    patch:
+      responses:
+        "200":
+          application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+          description: user can update hours 
 paths:
   /users/signup:
     post:
