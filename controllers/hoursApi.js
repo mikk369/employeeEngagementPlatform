@@ -1,6 +1,24 @@
 const Hours = require('../models/hoursModel');
 const fs = require('fs');
 
+exports.getAllhours = async(req,res,next)=> {
+try {
+    const hours = await Hours.find();
+    res.status(200).json({
+      status: "success",
+      results: hours.length,
+      data: {
+        hours
+      }
+    })
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err
+    })
+  }
+}
+
 exports.createHours = async (req, res, next) => {
   try {
     const newHour = await Hours.create(req.body);
