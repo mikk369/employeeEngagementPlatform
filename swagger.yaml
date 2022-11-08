@@ -15,8 +15,9 @@ paths:
               $ref: '#/components/schemas/hours'
       responses:
         '201':
-          description: user can add hours
-  /hours:
+          description: hours added
+        '400':
+          description: if requests body does not contain required fields or required fields are invalid format
     get:
       summary: Returns list of hours
       tags: [Hours]
@@ -29,9 +30,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/hours' 
-/hours/{id}:
-    get:
-      summary: Get hours by id
+
+  /hours/{id}:
+    patch:
+      summary: update hours
+      security:
+        - bearerAuth: []
       tags: [Hours]
       parameters:
         - in: path
@@ -39,14 +43,50 @@ paths:
           schema:
            type: string
           required: true
-          description: hours id
-      responses:
-        200:
-          description: hours by id
+          description: ID of the hour
+          example: 636a228c62df96c5baaec96a
+      requestBody:
+          required: true
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/hour'
+                type: ovject
+                properties:
+                  userId: string
+                  month: string
+                  year: number
+                  days:
+                    day: string
+                    hours: number
+              example:
+                    _id: 636a228c62df96c5baaec969
+                    userId: 6367edbf8901c69da661f0b9
+                    month: March
+                    year: 2011
+                    days:   
+                      createdAt: 2022-11-08T09:23:38.336Z
+                      day: 25
+                      hours: 7
+                      _id: 636a228c62df96c5baaec96a      
+      responses:
+        "201":
+          description: patches hours by id
+        '400':
+          description: if requests body does not contain required fields or required fields are invalid format
+    delete:
+      summary: deletes hours from db
+      security:
+        - bearerAuth: []
+      tags: [Hours]
+      parameters:
+        - in: path
+          name: id
+          schema:
+           type: string
+          required: true
+      responses:
+        "200":
+            description: string id of hour deleted
 components:
   schemas:
     hours:
@@ -56,59 +96,11 @@ components:
       items:
         $ref: '#/components/schemas/hours'
       example:
+        _id: 636a228c62df96c5baaec969
         userId:
           - 6366eec1385c79a791f80ee9
         month: November
         year: 2009
         days:
           day: wednesday
-          hours: 9
-  /hours/:id:
-    patch:
-      responses:
-        "200":
-          application/json:
-              schema:
-                $ref: '#/components/schemas/hours'
-          description: user can update hours 
-  /hours/:id:
-        delete:
-            requestBody:
-                required: true
-            responses:
-                '204':
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/hours'
-                    description: deletes hours from list
-paths:
-  /users/signup:
-    post:
-      tags:
-        - users
-      summary: Signup a new user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                password:
-                  type: string
-                  passwordConfirm: string
-              example:
-                name: mike
-                password: mikk12345
-      responses:
-        "201":
-          description: User created
-        "403":
-          description: User already exists
-        "406":
-          description: Email or password not acceptable
-        "500":
-          description: Error
+          hours: 9 
