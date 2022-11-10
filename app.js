@@ -9,7 +9,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = YAML.load('./swagger.yaml');
 
 const hourRouter = require('./routes/hoursRoutes');
-// const userRouter = require('./routes/userRoutes');
+const userRouter = require('./routes/userRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -26,7 +26,7 @@ mongoose.connect(DB, {
 console.log('DB connection successfull!');
 
 app.use('/hours', hourRouter);
-// app.use('/users', userRouter);
+app.use('/users', userRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
