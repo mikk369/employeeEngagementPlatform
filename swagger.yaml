@@ -2,10 +2,69 @@ openapi: 3.0.2
 info:
   title: employeeEngagementPlatform
   version: 1.0.0
+Authorization: Bearer <token>
 paths:
+  /users/signup:
+    post:
+      tags:
+        - users
+      summary: signup a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                password:
+                  type: string
+                passwordConfirm: string
+              example:
+                name: Mike
+                password: mike12345
+                passwordConfirm: mike12345
+      responses:
+        '201':
+          description: User created
+        '406':
+          description: name or password not acceptable
+        '500':
+          description: Error
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                password:
+                  type: string
+              example:
+                name: Mike
+                password: mike12345
+      responses:
+        '200':
+          description: 'OK, user logged in'
+        '401':
+          description: Incorrect name or password
+        '404':
+          description: User does not exist
+        '500':
+          description: Error
   /hours:
     post:
       summary: create new hours
+      security:
+        - bearerAuth: []
       tags: [Hours]
       requestBody:
         required: true
@@ -20,6 +79,8 @@ paths:
           description: if requests body does not contain required fields or required fields are invalid format
     get:
       summary: Returns list of hours
+      security:
+        - bearerAuth: []
       tags: [Hours]
       responses:
         200:
@@ -29,8 +90,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/hours' 
-
+                  $ref: '#/components/schemas/hours'
   /hours/{id}:
     patch:
       summary: update hours
@@ -41,35 +101,35 @@ paths:
         - in: path
           name: id
           schema:
-           type: string
+            type: string
           required: true
           description: ID of the hour
           example: 636a228c62df96c5baaec96a
       requestBody:
-          required: true
-          content:
-            application/json:
-              schema:
-                type: ovject
-                properties:
-                  userId: string
-                  month: string
-                  year: number
-                  days:
-                    day: string
-                    hours: number
-              example:
-                    _id: 636a228c62df96c5baaec969
-                    userId: 6367edbf8901c69da661f0b9
-                    month: March
-                    year: 2011
-                    days:   
-                      createdAt: 2022-11-08T09:23:38.336Z
-                      day: 25
-                      hours: 7
-                      _id: 636a228c62df96c5baaec96a      
+        required: true
+        content:
+          application/json:
+            schema:
+              type: ovject
+              properties:
+                userId: string
+                month: string
+                year: number
+                days:
+                  day: string
+                  hours: number
+            example:
+              _id: 636a228c62df96c5baaec969
+              userId: 6367edbf8901c69da661f0b9
+              month: March
+              year: 2011
+              days:
+                createdAt: 2022-11-08T09:23:38.336Z
+                day: 25
+                hours: 7
+                _id: 636a228c62df96c5baaec96a
       responses:
-        "201":
+        '201':
           description: patches hours by id
         '400':
           description: if requests body does not contain required fields or required fields are invalid format
@@ -82,11 +142,11 @@ paths:
         - in: path
           name: id
           schema:
-           type: string
+            type: string
           required: true
       responses:
-        "200":
-            description: string id of hour deleted
+        '200':
+          description: string id of hour deleted
 components:
   schemas:
     hours:
@@ -103,8 +163,8 @@ components:
         year: 2009
         days:
           day: wednesday
-          hours: 9 
+          hours: 9
   securitySchemes:
-        bearerAuth:
-            scheme: bearer
-            type: http
+    bearerAuth:
+      scheme: bearer
+      type: http
