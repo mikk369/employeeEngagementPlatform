@@ -104,3 +104,7 @@ components:
         days:
           day: wednesday
           hours: 9 
+  securitySchemes:
+        bearerAuth:
+            scheme: bearer
+            type: http
