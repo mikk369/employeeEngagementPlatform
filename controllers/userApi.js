@@ -4,7 +4,7 @@ exports.createUser = async (req, res, next) => {
   try {
     const newUser = await User.create(req.body);
     res.status(201).json({
-      status: 200,
+      status: 'success',
       user: newUser,
     });
   } catch (err) {
