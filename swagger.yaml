@@ -28,8 +28,8 @@ paths:
       responses:
         '201':
           description: User created
-        '406':
-          description: name or password not acceptable
+        '401':
+          description: Passwords are not the same!
         '500':
           description: Error
   /users/login:
