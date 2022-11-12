@@ -22,7 +22,7 @@ paths:
                   type: string
                 passwordConfirm: string
               example:
-                name: Mike
+                name: mike
                 password: mike12345
                 passwordConfirm: mike12345
       responses:
@@ -49,7 +49,7 @@ paths:
                 password:
                   type: string
               example:
-                name: Mike
+                name: mike
                 password: mike12345
       responses:
         '200':
@@ -152,13 +152,11 @@ components:
     hours:
       title: Root Type for employees
       description: ''
-      type: array
+      type: object
       items:
         $ref: '#/components/schemas/hours'
       example:
-        _id: 636a228c62df96c5baaec969
-        userId:
-          - 6366eec1385c79a791f80ee9
+        userId: 6366eec1385c79a791f80ee9
         month: November
         year: 2009
         days:
