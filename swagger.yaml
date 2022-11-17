@@ -4,7 +4,7 @@ info:
   version: 1.0.0
 Authorization: Bearer <token>
 paths:
-  /users/signup:
+  /user:
     post:
       tags:
         - users
@@ -32,7 +32,7 @@ paths:
           description: Passwords are not the same!
         '500':
           description: Error
-  /users/login:
+  /session:
     post:
       tags:
         - users
@@ -144,9 +144,15 @@ paths:
           schema:
             type: string
           required: true
+          description: ID of the hour that will be deleted
+          example: 636a218362df96c5baaec960
       responses:
-        '200':
-          description: string id of hour deleted
+        '204':
+          description: hours with given id deleted
+        "401":
+          description: No authorization token was found
+        "500":
+          description: Error
 components:
   schemas:
     hours:
