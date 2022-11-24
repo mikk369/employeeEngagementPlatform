@@ -2,47 +2,61 @@ openapi: 3.0.2
 info:
   title: employeeEngagementPlatform
   version: 1.0.0
-Authorization: Bearer <token>
 paths:
   /users:
     post:
-      tags:
-        - Users
-      summary: Sign up a new user
       requestBody:
-        required: true
+        description: req body
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                password:
-                  type: string
-                passwordConfirm: string
-              example:
-                name: mike
-                password: mike12345
-                passwordConfirm: mike12345
+              $ref: '#/components/schemas/user'
+            examples:
+              user:
+                value:
+                  email: bob@gmail.com
+                  password: mike12345
+        required: true
+      tags:
+        - Users
       responses:
         '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+              examples:
+                User created:
+                  value:
+                    status: success
+                    token: >-
+                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzN2ZhMmQxMmFjYTExMjJkNzFhN2M0MCIsImlhdCI6MTY2OTMwOTEzNywiZXhwIjoxNjY5NTY4MzM3fQ.K6ROPFEi9euTkzjXurhuhoSfYGxNEKOIaUh7ZaXh3bA
+                    data:
+                      user:
+                        email: bob@gmail.com
+                        active: true
+                        _id: 637fa2d12aca1122d71a7c40
+                        __v: 0
           description: User created
-        '401':
-          description: Passwords are not the same!
-        '500':
-          description: Error
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+              examples:
+                user already exists:
+                  value:
+                    error: User already exists
+          description: User already exists
+      summary: Sign up a new user
+      description: User created
   /sessions:
     post:
-      tags:
-        - Users
-      summary: Sign in a user
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/user'
               properties:
                 name:
                   type: string
@@ -51,108 +65,288 @@ paths:
               example:
                 name: mike
                 password: mike12345
+            examples:
+              user:
+                value:
+                  email: bob@gmail.com
+                  password: mike12345
+        required: true
+      tags:
+        - Users
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+              examples:
+                User added signed in:
+                  value:
+                    status: success
+                    token: >-
+                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzN2ZhZDZhNTg2MzA2MGQzM2JjMjk4NyIsImlhdCI6MTY2OTMxMzk3MywiZXhwIjoxNjY5NTczMTczfQ.UlCfzSqy9iBFLi6AELBrelKMDPjKKCTRoOAOTtOvaW4
+                    data:
+                      user:
+                        _id: 637fad6a5863060d33bc2987
+                        email: bob@gmail.com
+                        __v: 0
           description: 'OK, user logged in'
         '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+              examples:
+                provide email and password:
+                  value:
+                    error: Please provide email and password!
           description: Incorrect name or password
         '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+              examples:
+                user does not exist:
+                  value:
+                    error: User does not exist!
           description: User does not exist
-        '500':
-          description: Error
+      summary: Sign in a user
   /hours:
-    post:
-      summary: Create new hours
-      security:
-        - bearerAuth: []
-      tags: [Hours]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/hours'
-      responses:
-        '201':
-          description: hours added
-        '400':
-          description: if requests body does not contain required fields or required fields are invalid format
     get:
-      summary: Returns list of hours
-      security:
-        - bearerAuth: []
-      tags: [Hours]
+      tags:
+        - Hours
       responses:
-        200:
-          description: list of the hours
+        '200':
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/hours'
-  /hours/{id}:
-    patch:
-      summary: Update hours
+              examples:
+                hours example:
+                  value:
+                    status: success
+                    results: 3
+                    data:
+                      hours:
+                        - _id: 637f2db1959440147ff828db
+                          userId: 6366eec1385c79a791f80ee9
+                          month: November
+                          year: 2009
+                          days:
+                            - createdAt: '2022-11-24T08:31:00.755Z'
+                              day: wednesday
+                              hours: 9
+                              _id: 637f2db1959440147ff828dc
+                          __v: 0
+          description: list of the hours
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                not authorized:
+                  value:
+                    error: You are not logged in! Please log in to get access.
+          description: not authorized
       security:
-        - bearerAuth: []
-      tags: [Hours]
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: ID of the hour
-          example: 636a228c62df96c5baaec96a
+        - cookieAuth: []
+      summary: Returns list of hours
+    post:
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: ovject
+              $ref: '#/components/schemas/hours'
+        required: true
+      tags:
+        - Hours
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                hours added:
+                  value:
+                    status: 200
+                    hour:
+                      userId: 6366eec1385c79a791f80ee9
+                      month: November
+                      year: 2009
+                      days:
+                        - createdAt: '2022-11-24T18:53:27.475Z'
+                          day: wednesday
+                          hours: 9
+                          _id: 637fbe59390ad5ac854b6958
+                      _id: 637fbe59390ad5ac854b6957
+                      __v: 0
+          description: hours added
+        '400':
+          headers:
+            post header:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                bad request post header:
+                  value: "access-control-allow-origin: * \r\n connection: keep-alive \r\n content-length: 53 \r\n content-type: application/json; charset=utf-8 \r\n date: Thu,24 Nov 2022 18:58:58 GMT \r\n etag: W/\"35-q2fHAoP/SAtZA4gjE6q54BdESFc\" \r\n keep-alive: timeout=5 \r\n x-powered-by: Express "
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                required fields are not filled:
+                  value:
+                    error: required fields are not filled or in invalid format
+          description: >-
+            if requests body does not contain required fields or required fields are invalid
+            format
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                not autorized:
+                  value:
+                    error: You are not logged in! Please log in to get access.
+          description: not authorized
+      security:
+        - cookieAuth: []
+      summary: Create new hours
+  '/hours/{id}':
+    delete:
+      tags:
+        - Hours
+      parameters:
+        - example: 636a218362df96c5baaec960
+          name: id
+          description: ID of the hour that will be deleted
+          schema:
+            type: string
+          in: path
+          required: true
+      responses:
+        '204':
+          headers:
+            delete header:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                header:
+                  value: " access-control-allow-origin: * \r\n connection: keep-alive \r\n date: Thu,24 Nov 2022 19:51:37 GMT \r\n etag: W/\"20-bff5r/a5MyNNWy9hjn8a8pOLDxA\" \r\n keep-alive: timeout=5 \r\n x-powered-by: Express "
+          description: Retruns status code 204 with no body
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                not authorized:
+                  value:
+                    error: You are not logged in! Please log in to get access.
+          description: not authorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                hours not found:
+                  value:
+                    error: no document with given id
+          description: hours with given ID not found
+      security:
+        - cookieAuth: []
+      summary: Deletes hours from db
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
               properties:
-                userId: string
-                month: string
-                year: number
+                userId:
+                  type: object
+                month:
+                  type: string
+                year:
+                  type: number
                 days:
-                  day: string
-                  hours: number
+                  type: object
+                day:
+                  type: object
             example:
               _id: 636a228c62df96c5baaec969
               userId: 6367edbf8901c69da661f0b9
               month: March
               year: 2011
               days:
-                createdAt: 2022-11-08T09:23:38.336Z
+                createdAt: '2022-11-08T09:23:38.336Z'
                 day: 25
                 hours: 7
                 _id: 636a228c62df96c5baaec96a
-      responses:
-        '201':
-          description: patches hours by id
-        '400':
-          description: if requests body does not contain required fields or required fields are invalid format
-    delete:
-      summary: Deletes hours from db
-      security:
-        - bearerAuth: []
-      tags: [Hours]
+        required: true
+      tags:
+        - Hours
       parameters:
-        - in: path
+        - example: 636a228c62df96c5baaec96a
           name: id
+          description: ID of the hour
           schema:
             type: string
+          in: path
           required: true
-          description: ID of the hour that will be deleted
-          example: 636a218362df96c5baaec960
       responses:
-        '204':
-          description: hours with given id deleted
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                hours:
+                  value:
+                    _id: 636a228c62df96c5baaec969
+                    userId: 6367edbf8901c69da661f0b9
+                    month: March
+                    year: 2011
+                    days:
+                      createdAt: '2022-11-08T09:23:38.336Z'
+                      day: 25
+                      hours: 7
+                      _id: 636a228c62df96c5baaec96a
+          description: patches hours by id
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                bad request:
+                  value:
+                    message: >-
+                      requests body does not contain required fields or required fields
+                      are invalid format
+          description: >-
+            if requests body does not contain required fields or required fields are invalid
+            format
         '401':
-          description: No authorization token was found
-        '500':
-          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hours'
+              examples:
+                not athorized:
+                  value:
+                    error: You are not logged in! Please log in to get access.
+          description: not autorized
+      security:
+        - cookieAuth: []
+      summary: Update hours
 components:
   schemas:
     hours:
@@ -168,7 +362,42 @@ components:
         days:
           day: wednesday
           hours: 9
+    user:
+      title: Root Type for user
+      description: user object
+      type: object
+      properties:
+        status:
+          type: string
+        token:
+          type: string
+        data:
+          type: object
+          properties:
+            user:
+              type: object
+              properties:
+                email:
+                  type: string
+                active:
+                  type: boolean
+                _id:
+                  type: string
+                __v:
+                  format: int32
+                  type: integer
+      example:
+        status: success
+        token: >-
+          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzN2ZhMmQxMmFjYTExMjJkNzFhN2M0MCIsImlhdCI6MTY2OTMwOTEzNywiZXhwIjoxNjY5NTY4MzM3fQ.K6ROPFEi9euTkzjXurhuhoSfYGxNEKOIaUh7ZaXh3bA
+        data:
+          user:
+            email: bob@gmail.com
+            active: true
+            _id: 637fa2d12aca1122d71a7c40
+            __v: 0
   securitySchemes:
-    bearerAuth:
-      scheme: bearer
-      type: http
+    cookieAuth:
+      type: apiKey
+      name: jwt
+      in: cookie
