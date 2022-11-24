@@ -4,11 +4,11 @@ info:
   version: 1.0.0
 Authorization: Bearer <token>
 paths:
-  /user:
+  /users:
     post:
       tags:
-        - users
-      summary: signup a new user
+        - Users
+      summary: Sign up a new user
       requestBody:
         required: true
         content:
@@ -32,11 +32,11 @@ paths:
           description: Passwords are not the same!
         '500':
           description: Error
-  /session:
+  /sessions:
     post:
       tags:
-        - users
-      summary: Login a user
+        - Users
+      summary: Sign in a user
       requestBody:
         required: true
         content:
@@ -62,7 +62,7 @@ paths:
           description: Error
   /hours:
     post:
-      summary: create new hours
+      summary: Create new hours
       security:
         - bearerAuth: []
       tags: [Hours]
@@ -93,7 +93,7 @@ paths:
                   $ref: '#/components/schemas/hours'
   /hours/{id}:
     patch:
-      summary: update hours
+      summary: Update hours
       security:
         - bearerAuth: []
       tags: [Hours]
@@ -134,7 +134,7 @@ paths:
         '400':
           description: if requests body does not contain required fields or required fields are invalid format
     delete:
-      summary: deletes hours from db
+      summary: Deletes hours from db
       security:
         - bearerAuth: []
       tags: [Hours]
