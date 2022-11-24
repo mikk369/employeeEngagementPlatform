@@ -2,7 +2,6 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -18,7 +17,7 @@ const createSendToken = (user, statusCode, req, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   });
 
   // Remove password from output
@@ -28,30 +27,41 @@ const createSendToken = (user, statusCode, req, res) => {
     status: 'success',
     token,
     data: {
-      user
-    }
+      user,
+    },
   });
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
-    name: req.body.name,
+    email: req.body.email,
     password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
   });
+
+  if (newUser) {
+    return res.status(403).send({
+      error: 'User already exists',
+    });
+  }
 
   createSendToken(newUser, 201, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { name, password } = req.body;
+  const { email, password } = req.body;
   // 1) Check if name and password exist
-  if (!name || !password) {
-    return next(new AppError('Please provide name and password!', 400));
+  if (!email || !password) {
+    return res.status(401).send({
+      error: 'Please provide email and password!',
+    });
   }
   // 2) Check if user exists && password is correct
-  const user = await User.findOne({ name }).select('+password');
-
+  const user = await User.findOne({ email }).select('+password');
+  if (!user) {
+    return res.status(404).send({
+      error: 'User does not exist!',
+    });
+  }
   // 3) If everything ok, send token to client
   createSendToken(user, 200, req, res);
 });
@@ -69,9 +79,12 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   if (!token) {
-    return next(
-      new AppError('You are not logged in! Please log in to get access.', 401)
-    );
+    return res.status(401).send({
+      error: 'You are not logged in! Please log in to get access.',
+    });
+    // return next(
+    //   new AppError('You are not logged in! Please log in to get access.', 401)
+    // );
   }
 
   // 2) Verification token
