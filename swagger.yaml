@@ -8,7 +8,7 @@ paths:
     post:
       tags:
         - Users
-      summary: signup a new user
+      summary: Sign up a new user
       requestBody:
         required: true
         content:
@@ -36,7 +36,7 @@ paths:
     post:
       tags:
         - Users
-      summary: Login a user
+      summary: Sign in a user
       requestBody:
         required: true
         content:
@@ -62,7 +62,7 @@ paths:
           description: Error
   /hours:
     post:
-      summary: create new hours
+      summary: Create new hours
       security:
         - bearerAuth: []
       tags: [Hours]
@@ -93,7 +93,7 @@ paths:
                   $ref: '#/components/schemas/hours'
   /hours/{id}:
     patch:
-      summary: update hours
+      summary: Update hours
       security:
         - bearerAuth: []
       tags: [Hours]
@@ -134,7 +134,7 @@ paths:
         '400':
           description: if requests body does not contain required fields or required fields are invalid format
     delete:
-      summary: deletes hours from db
+      summary: Deletes hours from db
       security:
         - bearerAuth: []
       tags: [Hours]
