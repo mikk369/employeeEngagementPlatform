@@ -1,23 +1,23 @@
 const Hours = require('../models/hoursModel');
 const fs = require('fs');
 
-exports.getAllhours = async(req,res,next)=> {
-try {
+exports.getAllhours = async (req, res, next) => {
+  try {
     const hours = await Hours.find();
     res.status(200).json({
-      status: "success",
+      status: 'success',
       results: hours.length,
       data: {
-        hours
-      }
-    })
+        hours,
+      },
+    });
   } catch (err) {
     res.status(404).json({
-      status: "fail",
-      message: err
-    })
+      status: 'fail',
+      message: err,
+    });
   }
-}
+};
 
 exports.createHours = async (req, res, next) => {
   try {
@@ -26,8 +26,8 @@ exports.createHours = async (req, res, next) => {
       status: 200,
       hour: newHour,
     });
-  } catch (err) {
-    res.status(400).json('required fields are not filled or in invalid format');
+  } catch (error) {
+    res.status(411).json({ error: 'One or more required fields empty' });
   }
 };
 
@@ -59,7 +59,6 @@ exports.updateHours = async (req, res, next) => {
     });
   } catch (err) {
     res.status(400).json({
-      status: 'fail',
       message:
         'requests body does not contain required fields or required fields are invalid format',
     });
