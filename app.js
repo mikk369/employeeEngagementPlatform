@@ -35,7 +35,7 @@ mongoose.connect(DB, {
 console.log('DB connection successfull!');
 
 app.use('/hours', hourRouter);
-app.use('/users', userRouter);
+app.use('/', userRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
