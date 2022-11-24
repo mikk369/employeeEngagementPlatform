@@ -4,10 +4,10 @@ info:
   version: 1.0.0
 Authorization: Bearer <token>
 paths:
-  /user:
+  /users:
     post:
       tags:
-        - users
+        - Users
       summary: signup a new user
       requestBody:
         required: true
@@ -32,10 +32,10 @@ paths:
           description: Passwords are not the same!
         '500':
           description: Error
-  /session:
+  /sessions:
     post:
       tags:
-        - users
+        - Users
       summary: Login a user
       requestBody:
         required: true
@@ -149,9 +149,9 @@ paths:
       responses:
         '204':
           description: hours with given id deleted
-        "401":
+        '401':
           description: No authorization token was found
-        "500":
+        '500':
           description: Error
 components:
   schemas:
